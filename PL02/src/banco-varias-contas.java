@@ -11,38 +11,26 @@ class Bank {
 
   private static class Account {
     private int balance;
-    private Lock rl;
+    private final Lock rl = new ReentrantLock();
+
     Account(int balance) {
       this.balance = balance;
-      this.rl = new ReentrantLock();
     }
+
     int balance() {
-      this.rl.lock();
-      try{
-        return balance;
-      } finally {
-        this.rl.unlock();
-      }
+      return balance;
     }
+
     boolean deposit(int value) {
-      this.rl.lock();
-      try {
-        balance += value;
-        return true;
-      } finally {
-        this.rl.unlock();
-      }
+      balance += value;
+      return true;
     }
+
     boolean withdraw(int value) {
       if (value > balance)
         return false;
-      this.rl.lock();
-      try {
-        balance -= value;
-        return true;
-      } finally {
-        this.rl.unlock();
-      }
+      balance -= value;
+      return true;
     }
   }
 
@@ -62,58 +50,63 @@ class Bank {
   public int balance(int id) {
     if (id < 0 || id >= slots)
       return 0;
-    //this.rl.lock();
-    //try{
+    av[id].rl.lock();
+    try{
       return av[id].balance();
-    //} finally {
-      //this.rl.unlock();
-    //}
+    } finally {
+      av[id].rl.unlock();
+    }
   }
 
   // Deposit
   boolean deposit(int id, int value) {
     if (id < 0 || id >= slots)
       return false;
-    //this.rl.lock();
-    //try {
+    av[id].rl.lock();
+    try {
       return av[id].deposit(value);
-    //} finally {
-      //this.rl.unlock();
-    //}
+    } finally {
+      av[id].rl.unlock();
+    }
   }
 
   // Withdraw; fails if no such account or insufficient balance
   public boolean withdraw(int id, int value) {
     if (id < 0 || id >= slots)
       return false;
-    //this.rl.lock();
-    //try{
+    av[id].rl.lock();
+    try{
       return av[id].withdraw(value);
-    //} finally {
-      //this.rl.unlock();
-    //}
+    } finally {
+      av[id].rl.unlock();
+    }
   }
 
   public boolean transfer(int from, int to, int value){
     if(from < 0 || from >= slots || to < 0 || to >= slots)
       return false;
-    //this.rl.lock();
-    //try{
-      return withdraw(from, value) && deposit(to, value);
-    //} finally {
-      //this.rl.unlock();
-    //}
+    int min = Math.min(from, to);
+    int max = Math.max(from, to);
+    av[min].rl.lock();
+    av[max].rl.lock();
+    try{
+      if(withdraw(from, value))
+        return deposit(to, value);
+      return false;
+    } finally {
+      av[max].rl.unlock();
+      av[min].rl.unlock();
+    }
   }
 
   public int totalBalance(){
     int total = 0;
-    //this.rl.lock();
-    //try{
-      for(int i = 0; i < this.slots; i++) total += av[i].balance();
-      return total;
-    //} finally {
-      //this.rl.unlock();
-    //}
+    for(int i = 0; i < this.slots; i++) av[i].rl.lock();
+    for(int i = 0; i < this.slots; i++){
+      total += av[i].balance();
+    }
+    for(int i = 0; i < this.slots; i++) av[i].rl.unlock();
+    return total;
   }
 }
 
