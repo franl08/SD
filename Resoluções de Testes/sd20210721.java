@@ -45,7 +45,9 @@ public class ControlVacina implements ControloVacinas{
 
     public int getID(){
         int ans = 1;
-        for(Integer i : filaEspera) if(i > ans) ans = i + 1;
+        if(filaEspera != null)
+            for(Integer i : filaEspera) if(i > ans) ans = i + 1;
+        return ans;
     }
 
     public void pedirParaVacinar(){
