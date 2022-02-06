@@ -34,6 +34,7 @@ public class ControlVacina implements ControloVacinas{
 
     public ControlVacina(int n){
         this.numFrascosDisp = 0;
+        this.NUM = n;
         this.filaEspera = new PriorityQueue<>();
         this.ticket = 1;
     }
