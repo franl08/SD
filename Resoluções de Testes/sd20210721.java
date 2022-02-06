@@ -22,8 +22,6 @@ como argumento uma tag da mensagem que se pretende receber, assim sendo, poderá
     GRUPO 2.
 */
 
-import javax.xml.crypto.Data;
-
 public class ControlVacina implements ControloVacinas{
     private int numFrascosDisp;
     private final int NUM;
