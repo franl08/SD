@@ -47,7 +47,7 @@ public class Files implements Ficheiros{
 
     public int getId(){
         int res = 1;
-        for (Integer i : filaEspera.keySet()) if (i > res) res = i;
+        for (Integer i : filaEspera.keySet()) if (i >= res) res = i + 1;
         return res;
     }
 

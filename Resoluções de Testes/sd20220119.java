@@ -38,7 +38,6 @@ public class Votos implements Votacao{
     private ReentrantLock lockVotos = new ReentrantLock();
     private Map<Integer, Boolean> cabineEstaOcupada = new HashMap<>();
     private ReentrantLock lockCabine = new ReentrantLock();
-    private Condition condVotos = lockVotos.newCondition();
     private Condition condCabines = lockCabine.newCondition();
     private boolean votacaoFechada = false;    
 

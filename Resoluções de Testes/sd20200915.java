@@ -44,7 +44,7 @@ public class Sala implements SalaDeEspera{
         int res = 1;
         if(emEspera != null)
             for(Integer i : emEspera.keySet())
-                if(i > res) res = i + 1;
+                if(i >= res) res = i + 1;
         return res;
 
     }
