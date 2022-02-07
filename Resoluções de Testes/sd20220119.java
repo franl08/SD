@@ -33,15 +33,18 @@ GRUPO 2.
 
 public class Votos implements Votacao{
     private Set<Integer> jaVerificado = new HashSet<>();
+    private ReentrantLock lockVerificados = new ReentrantLock();
     private Map<Integer, Integer> votos = new HashMap<>();
+    private ReentrantLock lockVotos = new ReentrantLock();
     private Map<Integer, Boolean> cabineEstaOcupada = new HashMap<>();
-    private ReentrantLock lock = new ReentrantLock();
-    private Condition c = lock.newCondition();
+    private ReentrantLock lockCabine = new ReentrantLock();
+    private Condition condVotos = lockVotos.newCondition();
+    private Condition condCabines = lockCabine.newCondition();
     private boolean votacaoFechada = false;    
 
     public boolean verifica(int identidade){
         try{
-            lock.lock();
+            lockVerificados.lock();
             boolean verifica = false;
             if(!votacaoFechada){
                 verifica = !jaVerificado.contains(identidade);
@@ -49,7 +52,7 @@ public class Votos implements Votacao{
             }  
             return verifica;
         } finally{
-            lock.unlock();
+            lockVerificados.unlock();
         }
     }
 
@@ -70,34 +73,34 @@ public class Votos implements Votacao{
 
     public int esperaPorCabine() throws InterruptedException{
         try{
-            lock.lock();
+            lockCabine.lock();
             int res;
-            while ((res = getCabineLivre()) == -1) c.await();
+            while ((res = getCabineLivre()) == -1) condCabines.await();
             ocupaCabine(res);
             return res;
             }
         finally {
-            lock.unlock();
+            lockCabine.unlock();
         }
     }
 
     public void vota(int escolha){
         try{
-            lock.lock();
+            lockVotos.lock();
             int nVotos = votos.get(escolha) + 1;
             this.votos.put(escolha, nVotos);
         } finally{
-            lock.unlock();
+            lockVotos.unlock();
         }
     }
 
     public void desocupaCabine(int i){
         try{
-            lock.lock();
+            lockCabine.lock();
             this.cabineEstaOcupada.put(i, false);
-            c.signalAll();
+            condCabines.signalAll();
         } finally{
-            lock.unlock();
+            lockCabine.unlock();
         }
     }
 
@@ -113,12 +116,12 @@ public class Votos implements Votacao{
 
     public int vencedor() throws InterruptedException{
         try{
-            lock.lock();
+            lockCabine.lock();
             this.votacaoFechada = true;
             while(!todasLivres()) c.await();
             return getMaisVotacoes();
         } finally{
-            lock.unlock();
+            lockCabine.unlock();
         }
     }
 }
