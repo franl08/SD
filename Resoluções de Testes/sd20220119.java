@@ -118,7 +118,7 @@ public class Votos implements Votacao{
         try{
             lockCabine.lock();
             this.votacaoFechada = true;
-            while(!todasLivres()) c.await();
+            while(!todasLivres()) condCabines.await();
             return getMaisVotacoes();
         } finally{
             lockCabine.unlock();
