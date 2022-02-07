@@ -24,7 +24,7 @@ desta forma, visto que os dados se encontram mais perto, permite que eles não t
     GRUPO 2.
 */
 public class ControloA implements ControloAero{
-    private Map<Integer, Boolean> pistas;
+    private Map<Integer, Integer> pistas;
     private Set<Integer> avioesParaAterrar;
     private Set<Integer> avioesParaDescolar;
     private ReentrantLock lockPistas = new ReentrantLock();
@@ -34,11 +34,17 @@ public class ControloA implements ControloAero{
     private Condition condAvioesDescolar = lockAvioesDescolar.newCondition();
     private Integer descolagensSeguidas;
 
-    public ControloA(){
+    public ControloA(int nPistas){
+        generatePistas(nPistas);
         this.pistas = new HashMap<>();
         this.avioesParaAterrar = new HashSet<>();
         this.avioesParaDescolar = new HashSet<>();
         this.descolagensSeguidas = 0;
+    }
+
+    public void generatePistas(int nPistas){
+        this.pistas = new HashMap<>();
+        for(int i = 0; i < nPistas; i++) this.pistas.put(i, -1);
     }
 
 
@@ -72,7 +78,7 @@ public class ControloA implements ControloAero{
                 }
             }
             for(Integer i : pistas.keySet())
-                if(pistas.get(i)) return i;
+                if(pistas.get(i) == -1) return i;
             return -1;
         } finally{
             lockPistas.unlock();
@@ -91,7 +97,7 @@ public class ControloA implements ControloAero{
                 }
             }
             for(Integer i : pistas.keySet())
-                if(pistas.get(i)) return i;
+                if(pistas.get(i) == -1) return i;
             return -1;
         } finally{
             lockPistas.unlock();
@@ -99,47 +105,63 @@ public class ControloA implements ControloAero{
     }
 
     public int pedirParaDescolar(){
+        int pista;
         try{
             lockAvioesDescolar.lock();
             int id = getIdParaDescolar();
             avioesParaDescolar.add(id);
-            int pista;
             while(!vezDeDescolar(id) && (pista = podeDescolar()) == -1){
                 condAvioesDescolar.await();
             }
+        }finally{
+            lockAvioesDescolar.unlock();
+        }    
+        try{
+            lockPistas.lock();
             return pista;
         } finally{
-            lockAvioesDescolar.unlock();
+            lockPistas.unlock();
         }
     }
 
     public int pedirParaAterrar(){
+        int pista;
         try{
             lockAvioesAterrar.lock();
             int id = getIdParaAterrar();
             avioesParaAterrar.add(id);
-            int pista;
             while(vezDeDescolar(id) && (pista = podeAterrar()) == -1){
                 condAvioesAterrar.await();
             }
+        }finally{
+            lockAvioesAterrar.unlock();
+        }    
+        try{
+            lockPistas.lock();
             return pista;
         } finally{
-            lockAvioesAterrar.unlock();
+            lockPistas.unlock();
         }
     }
 
     public void descolou(int pista){
         lockPistas.lock();
-        this.pistas.put(pista, true);
+        lockAvioesDescolar.lock();
+        this.avioesParaDescolar.remove(this.pistas.get(pista));
+        this.pistas.put(pista, -1);
         lockPistas.unlock();
+        lockAvioesDescolar.lock();
         condAvioesAterrar.signalAll();
         condAvioesDescolar.signalAll();
     }
 
     public void aterrou(int pista){
         lockPistas.lock();
-        this.pistas.put(pista, true);
+        lockAvioesAterrar.lock();
+        this.avioesParaAterrar.remove(this.pistas.get(pista));
+        this.pistas.put(pista, -1);
         lockPistas.unlock();
+        lockAvioesAterrar.unlock();
         condAvioesAterrar.signalAll();
         condAvioesDescolar.signalAll();
     }
@@ -147,7 +169,7 @@ public class ControloA implements ControloAero{
 
 public class Server{
     public static void main(String[] args){
-        ControloA controlo = new ControloA();
+        ControloA controlo = new ControloA(5);
         ServerSocket ss = new ServerSocket(12345);
         DataInputStream in;
         DataOutputStream out;
