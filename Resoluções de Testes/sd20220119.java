@@ -121,11 +121,13 @@ public class Votos implements Votacao{
     public int vencedor() throws InterruptedException{
         try{
             lockCabine.lock();
+            lockVotos.lock();
             this.votacaoFechada = true;
             while(!todasLivres()) condCabines.await();
             return getMaisVotacoes();
         } finally{
             lockCabine.unlock();
+            lockVotos.unlock();
         }
     }
 }
