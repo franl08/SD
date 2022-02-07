@@ -46,12 +46,14 @@ public class Votos implements Votacao{
         try{
             lockVerificados.lock();
             boolean verifica = false;
+            lockCabine.lock();
             if(!votacaoFechada){
                 verifica = !jaVerificado.contains(identidade);
                 if(verifica) this.jaVerificado.add(identidade);
             }  
             return verifica;
         } finally{
+            lockCabine.unlock();
             lockVerificados.unlock();
         }
     }
