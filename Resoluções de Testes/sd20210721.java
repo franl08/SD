@@ -43,7 +43,7 @@ public class ControlVacina implements ControloVacinas{
     }
 
     public int getID(){
-        int ans = 1;
+        int ans = ticket;
         if(filaEspera != null)
             for(Integer i : filaEspera) if(i > ans) ans = i + 1;
         return ans;
