@@ -168,7 +168,7 @@ apenas seguirá a ordem definida.
 
         Então, as estratégias para reduzir o impacto das secções críticas:
             -> Objetos imutáveis (em JAVA têm as variáveis de instância como final)
-            -> Locks de granularidade fixa
+            -> Locks de granularidade fina
             -> Two Phase Locking
 
         Readers-Writers Locks -> Alternativo menos restrita aos locks normais

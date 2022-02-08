@@ -28,8 +28,8 @@ serão desenvolvidas as aplicações.
                     -> Capacidades de Reflexão presentes nas linguagens (OOS e OIS em JAVA utilizam isto, para evitar que certos campos não sejam serializados eles devem ser declarados como transient)
                     -> Geração automática do código das travessias feita a partir de uma descrição abstrata do tipo de dados (p.e. protobuf)
         A estrutra de dados é definida implicitamente no programa ou existe uma descrição da estrutura de dados?
-            -> Nos filtros e na reflexão -> conteúdo das mensagens é inferido (1º caso pela sequência de leitura/escrita, no 2º pela própria definição da estrutura de dados) [bastente conveniente para o desenvolvimento, no entanto
-está restrita a uma única lingugaem]
+            -> Nos filtros e na reflexão -> conteúdo das mensagens é inferido (1º caso pela sequência de leitura/escrita, no 2º pela própria definição da estrutura de dados) [bastante conveniente para o desenvolvimento, no entanto
+está restrita a uma única linguagem]
             -> Na outra opção não [obriga o programador a utilizar novas ferramentas, mas dá maior liberdade]
         De que forma lidam com versões diferentes do mesmo sistema de dados?
             -> Na forma mais simples de travessia -> quando a estrutura/formato dos dados muda irá provocar problemas, porque ao descodificar os dados como pensa correto irá obter dados corrompidos
