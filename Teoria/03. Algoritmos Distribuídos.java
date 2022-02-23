@@ -95,7 +95,7 @@ menos comuns e poderão não conter qualquer relógio de referência]
         REGRESSANDO AO PROBLEMA DE EXCLUSÃO MÚTUA
             Será que podemos alterar o último algoritmo de solução utilizando o relógio lógico:
                 -> Assume-se inicialmente que os processos estão continuamente a trocar mensagens
-                -> Não podemos utilzar o delta visto que não temos tempo real e qualquer processo pode dar um conjunto ilimitado de passos enquanto as mensagens estão a ser transmitidas
+                -> Não podemos utilizar o delta visto que não temos tempo real e qualquer processo pode dar um conjunto ilimitado de passos enquanto as mensagens estão a ser transmitidas
                     * Em cada processo vamos calcular o mínimo de todos os relógios lógicos que conhecemos dos outros processos [no fundo, é o cálculo retroativo do delta]
                 -> Ordena-se pelo timestamp e em caso de empate é utilizado o ID do processo para desempate
                 -> 1 salto para entrar na fila
