@@ -10,10 +10,10 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /* GRUPO 1
-    1. B | C | D
-    2. A | D
-    3. A 
-    4. A | C 
+    1. C | D
+    2. D
+    3. A | D
+    4. A
     5. Tendo em conta que o sistema em consideração trata-se de um sistema de criptomoedas em que os diversos pontos nele presentes deverão conter uma cópia do registo de todas as transações
 efetuadas e do conteúdo das carteiras do diversos clientes, apesar de surgirem outros problemas, nomeadamente a nível da exclusão mútua e da confirmação transacional distribuída, considero
 que o problema distribuído fulcral deste sistema seria a difusão fiável de mensagens, até porque, um correto funcionamento deste problema, visto o sistema presente, permitiria rápidas
