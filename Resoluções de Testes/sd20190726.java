@@ -6,6 +6,8 @@ este tipo de comunicação, quando um cliente enviar um pedido ao servidor, deve
 outras tarefas mesmo sem ter recebido resposta ao pedido enviado. Para isto ser possível, é necessário que a mensagem seja copiada para um buffer/queue de mensagens, sendo que a transmissão destas
 mensagens ocorre em paralelo com a execução do emissor. É ainda importante realças que a receção poderá ser uma ação bloqueante (ou não), ou seja, quando recebe uma mensagem poderá bloquear até ter
 terminado a receção.
+      Para a comunicação síncrona poderá utilizar-se, por exemplo, como middleware o Message Passing em middleware orientado a mensagens.
+      Para a comunicação assíncrona poderá utilizar-se, por exemplo, como middleware o Message Queuing em middleware orientado a mensagens.
    2. A estruturação em camadas de uma aplicação distribuída revela-se uma grande mais valia, pois, desta forma é simplificada a distinção entre cliente e servidor, bem como é melhorada a escalabilidade
 do sistema (visto que determinados componentes podem ser substituídos por outros sem grande prejuízo adicional).
       Geralmente, as aplicação distribuídas optam pela utilização do modelo em 3 camadas, derivado do modelo 'n' camadas, onde o sistema cliente/servidor é desenvolvido retirando a lógica do programa 
