@@ -10,8 +10,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 /* GRUPO 1.
     1. A | B | C
-    2. D
-    3. C | D
+    2. A | D
+    3. C
     4. A | B
     5. O middleware de invocação remote tem como principal função esconder as intereações entre clientes e servidores na invocação de procedimentos e métodos remotos. Quando este deve suportar
 clientes multi-threaded e invocações concorrentes a ele, surge o desafio da implementação relacionado à execução dos métodos corretos e do fornecimento de respostas às threads corretas. 
